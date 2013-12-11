@@ -9,3 +9,9 @@ insist.throws(function() {
   insist(false);
   insist(0);
 }, /insist\(false\);$/);
+
+insist.throws(function() {
+  insist(false ?
+    true :
+    false);
+}, /insist\(false \?\s+true :\s+false\);$/);
