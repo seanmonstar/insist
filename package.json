@@ -1,0 +1,26 @@
+{
+  "name": "insist",
+  "version": "0.1.0",
+  "description": "Drop-in replacement of assert with a better message.",
+  "main": "insist.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "stack-trace": "0.0.7"
+  },
+  "keywords": [
+    "assert",
+    "error",
+    "test",
+    "debug"
+  ],
+  "author": "Sean McArthur <sean.monstar@gmail.com> (http://seanmonstar.com)",
+  "bugs": "https://github.com/seanmonstar/insist/issues",
+  "homepage": "https://github.com/seanmonstar/insist",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seanmonstar/insist.git"
+  },
+  "license": "MPLv2.0"
+}
