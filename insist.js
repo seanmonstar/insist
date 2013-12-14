@@ -8,30 +8,31 @@ const fs = require('fs');
 const esprima = require('esprima');
 const stack = require('stack-trace');
 
-function insist(expression, message) {
-  if (expression) {
-    return;
+function traverse(node, func) {
+  func(node);
+  function _traverseChild(node) {
+    traverse(node, func);
   }
-  if (!message) {
-    var trace = stack.get()[1];
-    var fileName = trace.getFileName();
-    var line = trace.getLineNumber();
-    if (fileName !== 'repl') {
-      message = getMessage(fs.readFileSync(fileName, 'utf8'), line,
-          trace.getColumnNumber());
-    } else {
-      message = trace.fun.toString();
+  for (var key in node) {
+    if (node.hasOwnProperty(key)) {
+      var child = node[key];
+      if (typeof child === 'object' && child !== null) {
+
+        if (Array.isArray(child)) {
+          child.forEach(_traverseChild);
+        } else {
+          traverse(child, func);
+        }
+      }
     }
-
   }
-
-  return assert(false, message);
 }
 
-function getMessage(src, line, col) {
+function getSource(trace) {
+  var src = fs.readFileSync(trace.getFileName(), 'utf8');
   var tree = esprima.parse(src, { loc: true });
-  var startLine = line;
-  var startCol = col;
+  var startLine = trace.getLineNumber();
+  var startCol = trace.getColumnNumber();
   var endLine = Infinity;
   var endCol = Infinity;
   traverse(tree, function(node) {
@@ -54,35 +55,67 @@ function getMessage(src, line, col) {
   var lines = String(src).split(/\r?\n/);
   lines = lines.slice(startLine - 1, endLine - lines.length);
 
+  // add on assert or insist
+  // ex: equals() becomes assert.equals()
+  var a = 'assert';
+  var i = 'insist';
+  var mod = lines[0].substring(startCol - a.length - 2, startCol - 2);
+  if (mod === a || mod === i) {
+    startCol = startCol - a.length - 2;
+  }
+
   lines[0] = lines[0].substring(startCol - 1);
   lines[lines.length - 1] = lines[lines.length - 1].substring(0, endCol - 1);
 
   return lines.join('\n').trim();
 }
 
-function traverse(node, func) {
-  func(node);//1
-  for (var key in node) { //2
-    if (node.hasOwnProperty(key)) { //3
-      var child = node[key];
-      if (typeof child === 'object' && child !== null) { //4
-
-        if (Array.isArray(child)) {
-          child.forEach(function(node) { //5
-            traverse(node, func);
-          });
-        } else {
-          traverse(child, func); //6
-        }
-      }
-    }
+function getMessage() {
+  var trace = stack.get()[2];
+  var fileName = trace.getFileName();
+  if (fileName !== 'repl') {
+    return getSource(trace);
+  } else {
+    return trace.fun.toString();
   }
 }
 
 
 
+function decorate(key) {
+  return function insist() {
+    try {
+      assert[key].apply(assert, arguments);
+    } catch (err) {
+      if (err instanceof assert.AssertionError) {
+        var srcMsg = getMessage();
+        if (err.message) {
+          err.message += ' from ' + srcMsg;
+        } else {
+          err.message = srcMsg;
+        }
+      }
+      throw err;
+    }
+  };
+}
+
+var NO_ASSERT = process.env.NO_ASSERT;
+function noop() {}
+
+var insist = NO_ASSERT ? noop : function insist(expression, message) {
+  if (expression) {
+    return;
+  }
+  if (!message) {
+    message = getMessage();
+  }
+  assert(expression, message);
+};
+
 Object.keys(assert).forEach(function(key) {
-  insist[key] = assert[key];
+  insist[key] = NO_ASSERT ? noop : decorate(key);
 });
+insist.ok = insist;
 
 module.exports = insist;

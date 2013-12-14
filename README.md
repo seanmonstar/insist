@@ -11,9 +11,11 @@ var assert = require('insist');
 // AssertionError: assert(3 instanceof Function);
 assert(3 instanceof Function);
 
-//plus all properties of assert like normal;
-assert.equal();
+//plus all properties of assert
+assert.equal(foo, bar); // AssertionError: "baz" == "quux" from assert.equal(foo, bar);
 assert.ok();
 assert.deepEqual();
 // etc...
 ```
+
+Also, turn off these assertions with `NO_ASSERT=1` env var.
