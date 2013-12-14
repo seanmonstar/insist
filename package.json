@@ -1,6 +1,6 @@
 {
   "name": "insist",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Drop-in replacement of assert with a better message.",
   "main": "insist.js",
   "scripts": {
