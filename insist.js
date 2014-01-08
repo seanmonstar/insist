@@ -8,6 +8,11 @@ const fs = require('fs');
 const esprima = require('esprima');
 const stack = require('stack-trace');
 
+const NO_ASSERT = process.env.NO_ASSERT;
+const DONT_DECORATE = ['ok', 'fail', 'AssertionError'];
+
+function noop() {}
+
 function traverse(node, func) {
   func(node);
   function _traverseChild(node) {
@@ -100,21 +105,14 @@ function decorate(key) {
   };
 }
 
-var NO_ASSERT = process.env.NO_ASSERT;
-function noop() {}
-
-var insist = NO_ASSERT ? noop : function insist(expression, message) {
-  if (expression) {
-    return;
-  }
-  if (!message) {
-    message = getMessage();
-  }
-  assert(expression, message);
-};
+var insist = NO_ASSERT ? noop : decorate('ok');
 
 Object.keys(assert).forEach(function(key) {
-  insist[key] = NO_ASSERT ? noop : decorate(key);
+  if (DONT_DECORATE.indexOf(key) !== -1) {
+    insist[key] = assert[key];
+  } else {
+    insist[key] = NO_ASSERT ? noop : decorate(key);
+  }
 });
 insist.ok = insist;
 
