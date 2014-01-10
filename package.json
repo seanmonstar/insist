@@ -1,13 +1,13 @@
 {
   "name": "insist",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Drop-in replacement of assert with a better message.",
   "main": "insist.js",
   "scripts": {
     "test": "node test.js"
   },
   "dependencies": {
-    "esprima": "1.0.4",
+    "esprima": "~1.0.4",
     "stack-trace": "0.0.7"
   },
   "keywords": [
