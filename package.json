@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "esprima": "~1.0.4",
-    "stack-trace": "0.0.7"
+    "stack-trace": "~0.0.7"
   },
   "keywords": [
     "assert",
