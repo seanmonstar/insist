@@ -2,14 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const assert = require('assert');
-const fs = require('fs');
+/*const*/ var assert = require('assert');
+/*const*/ var fs = require('fs');
 
-const esprima = require('esprima');
-const stack = require('stack-trace');
+/*const*/ var esprima = require('esprima');
+/*const*/ var stack = require('stack-trace');
 
-const NO_ASSERT = process.env.NO_ASSERT;
-const DONT_DECORATE = ['ok', 'fail', 'AssertionError'];
+/*const*/ var NO_ASSERT = process.env.NO_ASSERT;
+/*const*/ var DONT_DECORATE = ['ok', 'fail', 'AssertionError'];
 
 function noop() {}
 
