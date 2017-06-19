@@ -100,6 +100,7 @@ function decorate(key) {
           err.message = srcMsg;
         }
       }
+      Error.captureStackTrace(err, insist);
       throw err;
     }
   };

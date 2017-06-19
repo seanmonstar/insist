@@ -23,7 +23,20 @@ insist.throws(function() {
   var foo = 'bar';
   var baz = 'quux';
   insist.equal(foo, baz);
-}, /(?:"bar" == "quux" from )?insist.equal\(foo, baz\)/);
+}, /^AssertionError: 'bar' == 'quux' from insist.equal\(foo, baz\)/);
+
+// trace
+try {
+  (function trace() {
+    insist.ok(false);
+  })();
+} catch (e) {
+  (function() {
+    var lines = e.stack.split('\n');
+    var expected = '    at trace (';
+    insist.equal(lines[1].slice(0, expected.length), expected);
+  })();
+}
 
 // throws
 insist.throws(function() {
