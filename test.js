@@ -23,7 +23,7 @@ insist.throws(function() {
   var foo = 1;
   var baz = 2;
   insist.equal(foo, baz);
-}, /^AssertionError: 1 == 2 from insist.equal\(foo, baz\)/);
+}, /^AssertionError(?: \[ERR_ASSERTION\])?: 1 == 2 from insist.equal\(foo, baz\)/);
 
 // trace
 try {
