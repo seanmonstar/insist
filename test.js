@@ -20,10 +20,10 @@ insist.throws(function() {
 
 // equal
 insist.throws(function() {
-  var foo = 'bar';
-  var baz = 'quux';
+  var foo = 1;
+  var baz = 2;
   insist.equal(foo, baz);
-}, /^AssertionError: 'bar' == 'quux' from insist.equal\(foo, baz\)/);
+}, /^AssertionError: 1 == 2 from insist.equal\(foo, baz\)/);
 
 // trace
 try {
