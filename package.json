@@ -7,8 +7,8 @@
     "test": "node test.js"
   },
   "dependencies": {
-    "esprima": "^2.0.0",
-    "stack-trace": "^0.0.7"
+    "esprima": "^4.0.0",
+    "stack-trace": "^0.0.10"
   },
   "keywords": [
     "assert",
