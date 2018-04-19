@@ -41,7 +41,7 @@ function getSource(trace) {
   var endLine = Infinity;
   var endCol = Infinity;
   traverse(tree, function(node) {
-    if (node.type === 'CallExpression') {
+    if (node && node.type === 'CallExpression') {
       if (node.loc.start.line > startLine || node.loc.start.col > startCol) {
         return;
       }
